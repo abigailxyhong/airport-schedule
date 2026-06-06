@@ -1,0 +1,12 @@
+.app-div {
+    padding: 10px;
+}
+
+h1{
+    text-align: center;
+    padding-top: 5px;
+}
+
+hr {
+    border-top: 2px solid gray;
+}
