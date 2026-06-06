@@ -5,7 +5,7 @@ navbar = dbc.Navbar(
     dbc.Container(
         [
             # Brand on the left
-            dbc.NavbarBrand("Airport Dashboard", href="/"),
+            dbc.NavbarBrand("Jersey Airport Dashboard", href="/"),
 
             # Full-width nav links, equally spaced
             dbc.Nav(
@@ -22,5 +22,4 @@ navbar = dbc.Navbar(
     ),
     color="primary",
     dark=True,
-    sticky="top",
 )
