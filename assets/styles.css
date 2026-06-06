@@ -10,3 +10,10 @@ h1{
 hr {
     border-top: 2px solid gray;
 }
+
+.nav-main {
+    width: fit-content(90%);
+    display: flex;
+    justify-content: space-between;
+}
+
