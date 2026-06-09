@@ -9,7 +9,7 @@ navbar = dmc.Paper(
         px="lg",
         children=[
             dmc.Title(
-                "Jersey Airport Dashboard",
+                "JERSEY AIRPORT DASHBOARD",
                 order=1,
                 c="#E6EDF3",
                 className="brand-title",
@@ -19,18 +19,15 @@ navbar = dmc.Paper(
                 gap="xl",
                 children=[
                     dmc.Anchor(
-                        "Flight Volume",
+                        "FLIGHT VOLUME",
                         href="/flight_volume",
+                        underline="never",
                         className="nav-link",
                     ),
                     dmc.Anchor(
-                        "Capacity",
+                        "CAPACITY",
                         href="/capacity",
-                        className="nav-link",
-                    ),
-                    dmc.Anchor(
-                        "Routes",
-                        href="/routes",
+                        underline="never",
                         className="nav-link",
                     ),
                 ],

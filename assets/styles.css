@@ -4,25 +4,14 @@ body {
     font-family: Inter, Nunito, sans-serif;
 }
 
-h1 {
-    text-align: center;
-    padding-top: 5px;
-}
-
-h3 {
-    padding-top: 5px;
-    color: whitesmoke;
-}
-
-hr {
-    border-top: 2px solid gray;
+.mantine-AppShell-main {
+    padding-top: 0px !important;
 }
 
 .navbar {
     height: 78px;
     background-color: #0B0F14;
     border-bottom: 1px solid #1F2A3A;
-    position: sticky;
     top: 0;
     z-index: 1000;
     backdrop-filter: blur(10px);
@@ -31,10 +20,6 @@ hr {
 .brand-title {
     letter-spacing: 0.5px;
     font-weight: 700;
-}
-
-.header-card {
-    background-color: #111826;
 }
 
 .nav-link {
@@ -48,7 +33,6 @@ hr {
 .nav-link:hover {
     color: #7DF9FF;
     text-shadow: 0 0 8px rgba(125, 249, 255, 0.4);
-    transform: translateY(-1px);
 }
 
 .dmc-paper {
@@ -71,32 +55,39 @@ hr {
     transition: all 0.2s ease;
 }
 
-.app-div {
-    padding: 10px;
-}
-
-.content-div {
-    padding: 10px;
-}
-
 .page-title {
     color: #E6EDF3;
     letter-spacing: 0.3px;
-}
-
-/* Row containing title + graph selector */
-.title-row {
-    display: flex;
-    justify-content: space-between;   /* pushes dropdown to the right */
-    align-items: center;              /* vertically aligns them */
-    width: 100%;
-    margin-bottom: 12px;
 }
 
 .select-control input {
     background-color: #0B1220 !important;
     border: 1px solid #243244 !important;
     color: #E6EDF3 !important;
+}
+
+/* dropdown panel (VERY IMPORTANT) */
+.select-control .mantine-Select-dropdown {
+    background-color: #0F1623 !important;
+    border: 1px solid #1F2A3A !important;
+}
+
+/* dropdown items */
+.select-control .mantine-Select-item {
+    background-color: transparent !important;
+    color: #B8C7D9 !important;
+}
+
+/* hover state */
+.select-control .mantine-Select-item:hover {
+    background-color: rgba(125, 249, 255, 0.08) !important;
+    color: #7DF9FF !important;
+}
+
+/* selected item */
+.select-control .mantine-Select-item[data-selected] {
+    background-color: rgba(125, 249, 255, 0.12) !important;
+    color: #7DF9FF !important;
 }
 
 .select-control input:focus {
@@ -119,15 +110,10 @@ hr {
     color: #0d0f12;
 }
 
-a:hover {
-    color: #00f5d4 !important; /* neon mint */
-    text-shadow: 0 0 6px #00f5d4;
-}
 
 
 
 
-/* --- Shared filter styling --- */
 
 
 

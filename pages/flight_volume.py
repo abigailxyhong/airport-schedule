@@ -26,7 +26,7 @@ layout = dmc.Container(
 
         # ---------------- Header Card ----------------
         dmc.Paper(
-            className="card header-card",
+            className="card",
             p="lg",
             children=[
 
@@ -36,8 +36,8 @@ layout = dmc.Container(
                     children=[
 
                         dmc.Title(
-                            "Flight Volume",
-                            order=3,
+                            "FLIGHT VOLUME",
+                            order=4,
                             className="page-title",
                         ),
 
@@ -86,7 +86,7 @@ layout = dmc.Container(
 
         # ---------------- Graph Card ----------------
         dmc.Paper(
-            className="card graph-card",
+            className="card",
             children=[
                 dcc.Graph(
                     id="main-graph",
