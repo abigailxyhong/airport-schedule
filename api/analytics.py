@@ -3,13 +3,13 @@ import pandas as pd
 # -----------------------------
 # FILTERING HELPER
 # -----------------------------
-def apply_filters(df: pd.DataFrame,
-                  airline: str | None = None,
-                  destination: str | None = None) -> pd.DataFrame:
-    """
-    Apply optional filters to the flight dataframe.
-    Works with your load_data() output.
-    """
+def apply_filters(
+    df: pd.DataFrame,
+    airline: str | None = None,
+    destination: str | None = None,
+    start_date: str | None = None,
+    end_date: str | None = None,
+) -> pd.DataFrame:
 
     dff = df.copy()
 
@@ -18,6 +18,12 @@ def apply_filters(df: pd.DataFrame,
 
     if destination:
         dff = dff[dff["arr_airport_code"] == destination]
+
+    if start_date:
+        dff = dff[dff["flight_date"] >= pd.to_datetime(start_date)]
+
+    if end_date:
+        dff = dff[dff["flight_date"] <= pd.to_datetime(end_date)]
 
     return dff
 

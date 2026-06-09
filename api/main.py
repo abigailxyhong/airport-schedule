@@ -18,9 +18,12 @@ def list_destinations():
 
 @app.get("/analytics/flights-per-hour")
 def get_flights_per_hour(airline: str | None = None,
-                         destination: str | None = None):
+                         destination: str | None = None,
+                         start_date: str | None = None,
+                         end_date: str | None = None
+                         ):
 
-    dff = analytics.apply_filters(df, airline, destination)
+    dff = analytics.apply_filters(df, airline, destination, start_date, end_date)
     result = analytics.flights_per_hour(dff)
     return result.to_dict(orient="records")
 
@@ -28,10 +31,18 @@ def get_flights_per_hour(airline: str | None = None,
 def get_flights_per_day(
     airline: str | None = None,
     destination: str | None = None,
+    start_date: str | None = None,
+    end_date: str | None = None,
 ):
-    dff = analytics.apply_filters(df, airline, destination)
-    result = analytics.flights_per_day(dff)
-    return result.to_dict(orient="records")
+    dff = analytics.apply_filters(
+        df,
+        airline,
+        destination,
+        start_date,
+        end_date,
+    )
+
+    return analytics.flights_per_day(dff).to_dict("records")
 
 
 @app.get("/analytics/flights-per-airline")
@@ -59,3 +70,11 @@ def get_flights_per_destination(
     dff = analytics.apply_filters(df, airline, destination)
     result = analytics.flights_per_destination(dff)
     return result.to_dict(orient="records")
+
+@app.get("/analytics/date-range")
+def get_date_range():
+
+    return {
+        "min_date": df["flight_date"].min().strftime("%Y-%m-%d"),
+        "max_date": df["flight_date"].max().strftime("%Y-%m-%d"),
+    }

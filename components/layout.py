@@ -1,7 +1,7 @@
 import dash_mantine_components as dmc
 from dash import Dash
 import dash
-from components.navbar import navbar
+from components.flight_volume import flight_volume_layout
 
 
 def create_layout(app: Dash):
@@ -13,8 +13,13 @@ def create_layout(app: Dash):
         children=dmc.AppShell(
             header={"height": 80},
             children=[
-                navbar,
-                dmc.AppShellMain(dash.page_container),
+                dmc.Title(
+                    "JERSEY AIRPORT DASHBOARD",
+                    order=1,
+                    c="#E6EDF3",
+                    className="brand-title",
+                ),
+                dmc.AppShellMain(flight_volume_layout),
             ],
         ),
     )

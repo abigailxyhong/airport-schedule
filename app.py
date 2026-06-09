@@ -12,21 +12,10 @@ from api.data_loader import load_data
 # App initialisation
 # ------------------------------------------------------------
 def main() -> None:
-    app = Dash(
-        __name__,
-        external_stylesheets=[], 
-        use_pages=True)
+    app = Dash(__name__)
     app.title = "Jersey Airport Dashboard"
     app.layout = create_layout(app)
     app.run(debug=True)
 
-# ------------------------------------------------------------
-# Callbacks
-# ------------------------------------------------------------
-
-
-# ------------------------------------------------------------
-# Entry point
-# ------------------------------------------------------------
 if __name__ == "__main__":
     main()
