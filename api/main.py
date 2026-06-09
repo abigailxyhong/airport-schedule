@@ -18,11 +18,9 @@ def list_destinations():
 
 @app.get("/analytics/flights-per-hour")
 def get_flights_per_hour(airline: str | None = None,
-                         destination: str | None = None,
-                         start_date: str | None = None,
-                         end_date: str | None = None):
+                         destination: str | None = None):
 
-    dff = analytics.apply_filters(df, airline, destination, start_date, end_date)
+    dff = analytics.apply_filters(df, airline, destination)
     result = analytics.flights_per_hour(dff)
     return result.to_dict(orient="records")
 
@@ -30,10 +28,8 @@ def get_flights_per_hour(airline: str | None = None,
 def get_flights_per_day(
     airline: str | None = None,
     destination: str | None = None,
-    start_date: str | None = None,
-    end_date: str | None = None
 ):
-    dff = analytics.apply_filters(df, airline, destination, start_date, end_date)
+    dff = analytics.apply_filters(df, airline, destination)
     result = analytics.flights_per_day(dff)
     return result.to_dict(orient="records")
 
@@ -41,13 +37,11 @@ def get_flights_per_day(
 @app.get("/analytics/flights-per-airline")
 def get_flights_per_airline(
     airline: str | None = None,
-    destination: str | None = None,
-    start_date: str | None = None,
-    end_date: str | None = None
+    destination: str | None = None
 ):
     try:
-        print("FASTAPI received:", airline, destination, start_date, end_date)
-        dff = analytics.apply_filters(df, airline, destination, start_date, end_date)
+        print("FASTAPI received:", airline, destination)
+        dff = analytics.apply_filters(df, airline, destination)
         print("Filtered rows:", len(dff))
         result = analytics.flights_per_airline(dff)
         print("Result rows:", len(result))
@@ -61,9 +55,7 @@ def get_flights_per_airline(
 def get_flights_per_destination(
     airline: str | None = None,
     destination: str | None = None,
-    start_date: str | None = None,
-    end_date: str | None = None
 ):
-    dff = analytics.apply_filters(df, airline, destination, start_date, end_date)
+    dff = analytics.apply_filters(df, airline, destination)
     result = analytics.flights_per_destination(dff)
     return result.to_dict(orient="records")

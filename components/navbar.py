@@ -1,25 +1,40 @@
-import dash_bootstrap_components as dbc
-from dash import html
+import dash_mantine_components as dmc
 
-navbar = dbc.Navbar(
-    dbc.Container(
-        [
-            # Brand on the left
-            dbc.NavbarBrand("Jersey Airport Dashboard", href="/"),
+navbar = dmc.Paper(
+    className="navbar",
+    children=dmc.Group(
+        justify="space-between",
+        align="center",
+        h="100%",
+        px="lg",
+        children=[
+            dmc.Title(
+                "Jersey Airport Dashboard",
+                order=1,
+                c="#E6EDF3",
+                className="brand-title",
+            ),
 
-            # Full-width nav links, equally spaced
-            dbc.Nav(
-                [
-                    dbc.NavItem(dbc.NavLink("Flight Volume", href="/flight_volume")),
-                    dbc.NavItem(dbc.NavLink("Capacity", href="/capacity")),
-                    dbc.NavItem(dbc.NavLink("Routes", href="/routes")),
+            dmc.Group(
+                gap="xl",
+                children=[
+                    dmc.Anchor(
+                        "Flight Volume",
+                        href="/flight_volume",
+                        className="nav-link",
+                    ),
+                    dmc.Anchor(
+                        "Capacity",
+                        href="/capacity",
+                        className="nav-link",
+                    ),
+                    dmc.Anchor(
+                        "Routes",
+                        href="/routes",
+                        className="nav-link",
+                    ),
                 ],
-                className="nav-main",
-                navbar=True,
             ),
         ],
-        fluid=True,
     ),
-    color="primary",
-    dark=True,
 )

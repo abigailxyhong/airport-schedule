@@ -1,22 +1,74 @@
-h1{
+body {
+    background-color: #0B0F14;
+    color: #E6EDF3;
+    font-family: Inter, Nunito, sans-serif;
+}
+
+h1 {
     text-align: center;
     padding-top: 5px;
 }
 
 h3 {
     padding-top: 5px;
+    color: whitesmoke;
 }
 
 hr {
     border-top: 2px solid gray;
 }
 
-.nav-main {
-    width: fit-content(90%);
-    display: flex;
-    justify-content: space-between;
-    padding-top: 0.05rem;
-    padding-bottom: 0.05rem;
+.navbar {
+    height: 78px;
+    background-color: #0B0F14;
+    border-bottom: 1px solid #1F2A3A;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    backdrop-filter: blur(10px);
+}
+
+.brand-title {
+    letter-spacing: 0.5px;
+    font-weight: 700;
+}
+
+.header-card {
+    background-color: #111826;
+}
+
+.nav-link {
+    color: #B8C7D9;
+    font-weight: 500;
+    text-decoration: none;
+    position: relative;
+    transition: all 0.2s ease;
+}
+
+.nav-link:hover {
+    color: #7DF9FF;
+    text-shadow: 0 0 8px rgba(125, 249, 255, 0.4);
+    transform: translateY(-1px);
+}
+
+.dmc-paper {
+    background-color: #111826;
+    border: 1px solid #1F2A3A;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
+}
+
+.page-container {
+    background-color: #0B0F14;
+    min-height: 100vh;
+    padding: 24px;
+}
+
+.card {
+    background-color: #0F1623;
+    border: 1px solid #1F2A3A;
+    border-radius: 12px;
+    box-shadow: 0 0 25px rgba(0,0,0,0.35);
+    transition: all 0.2s ease;
 }
 
 .app-div {
@@ -27,59 +79,56 @@ hr {
     padding: 10px;
 }
 
-/* --- Shared filter styling --- */
+.page-title {
+    color: #E6EDF3;
+    letter-spacing: 0.3px;
+}
 
-/* Horizontal row for filters */
-.filter-row {
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-
-    width: 100%;
+/* Row containing title + graph selector */
+.title-row {
     display: flex;
-    flex-direction: row;
-    justify-content: flex-end;   /* push filters to the right */
-    align-items: center;
-    gap: 12px;
-
-    padding: 10px 16px;
-    background: white;           /* prevents overlap transparency */
-    border-bottom: 1px solid #ddd;
-}
-
-
-.filter-control {
-    width: 260px;              /* consistent width */
-    margin-right: 12px;        /* spacing between filters */
-    margin-bottom: 12px;       /* spacing below rows */
-}
-
-/* Make dropdowns more compact */
-.filter-control .Select-control {
-    min-height: 34px !important;
-    height: 34px !important;
-}
-
-.filter-control .Select-placeholder,
-.filter-control .Select-value-label {
-    line-height: 34px !important;
-    font-size: 0.9rem;
-}
-
-.filter-control .Select-input {
-    height: 34px !important;
-}
-
-/* --- DatePickerRange styling --- */
-.dash-date-picker {
-    width: 260px;
-    margin-right: 12px;
+    justify-content: space-between;   /* pushes dropdown to the right */
+    align-items: center;              /* vertically aligns them */
+    width: 100%;
     margin-bottom: 12px;
 }
 
-.dash-date-picker input {
-    height: 34px !important;
-    padding: 4px 8px !important;
-    font-size: 0.9rem;
+.select-control input {
+    background-color: #0B1220 !important;
+    border: 1px solid #243244 !important;
+    color: #E6EDF3 !important;
 }
+
+.select-control input:focus {
+    border-color: #7DF9FF !important;
+    box-shadow: 0 0 10px rgba(125, 249, 255, 0.25);
+}
+
+.filter-label {
+    color: #8AA2C0;
+    font-size: 12px;
+    letter-spacing: 0.4px;
+    text-transform: uppercase;
+}
+
+.graph {
+    height: 520px;
+}
+
+.dropdown {
+    color: #0d0f12;
+}
+
+a:hover {
+    color: #00f5d4 !important; /* neon mint */
+    text-shadow: 0 0 6px #00f5d4;
+}
+
+
+
+
+/* --- Shared filter styling --- */
+
+
+
 

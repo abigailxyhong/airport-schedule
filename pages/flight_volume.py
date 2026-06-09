@@ -1,152 +1,230 @@
 import dash
 import requests
-from dash import html, dcc, Input, Output
 import plotly.express as px
+import dash_mantine_components as dmc
+
+from dash import dcc, Input, Output
 
 API_URL = "http://127.0.0.1:8000"
+
 dash.register_page(__name__, path="/flight_volume")
 
-# Layout
-layout = html.Div([
-    html.H3("Flight Volume"),
+def apply_dark_theme(fig):
+    fig.update_layout(
+        template="plotly_dark",
+        paper_bgcolor="#0F1623",
+        plot_bgcolor="#0F1623",
+        font=dict(color="#E6EDF3"),
+        margin=dict(l=40, r=20, t=40, b=40),
+    )
+    return fig
 
-    # Filters
-    html.Div([
-        dcc.Dropdown(
-            id="airline-filter",
-            placeholder="Select airline",
-            className="filter-control"
+layout = dmc.Container(
+    fluid=True,
+    className="page-container",
+    children=[
+
+        # ---------------- Header Card ----------------
+        dmc.Paper(
+            className="card header-card",
+            p="lg",
+            children=[
+
+                dmc.Group(
+                    justify="space-between",
+                    align="center",
+                    children=[
+
+                        dmc.Title(
+                            "Flight Volume",
+                            order=3,
+                            className="page-title",
+                        ),
+
+                        dmc.Select(
+                            id="graph-selector",
+                            value="hour",
+                            data=[
+                                {"label": "Flights per Hour", "value": "hour"},
+                                {"label": "Flights per Day", "value": "day"},
+                            ],
+                            w=260,
+                            className="select-control",
+                        ),
+                    ],
+                ),
+
+                dmc.Space(h="md"),
+
+                dmc.Stack(
+                    gap="sm",
+                    children=[
+
+                        dmc.Text("Airline", className="filter-label"),
+
+                        dmc.RadioGroup(
+                            id="airline-radio",
+                            value="ALL",
+                            children=dmc.Group(gap="sm"),
+                        ),
+
+                        dmc.Divider(),
+
+                        dmc.Text("Destination", className="filter-label"),
+
+                        dmc.RadioGroup(
+                            id="destination-radio",
+                            value="ALL",
+                            children=dmc.Group(gap="sm"),
+                        ),
+                    ],
+                ),
+            ],
         ),
-        dcc.Dropdown(
-            id="destination-filter",
-            placeholder="Select destination",
-            className="filter-control"
+
+        dmc.Space(h="md"),
+
+        # ---------------- Graph Card ----------------
+        dmc.Paper(
+            className="card graph-card",
+            children=[
+                dcc.Graph(
+                    id="main-graph",
+                    config={"displayModeBar": False},
+                    className="graph",
+                )
+            ],
         ),
-        dcc.DatePickerRange(
-            id="date-range",
-            className="dash-date-picker"
-        ),
-    ], className="filter-row"),
-
-    # Graphs
-    dcc.Graph(id="hourly-chart"),
-    dcc.Graph(id="daily-chart"),
-    dcc.Graph(id="airline-chart"),
-    dcc.Graph(id="destination-chart"),
-
-], className="content-div")
-
-# Callbacks
-
-@dash.callback(
-    Output("airline-filter", "options"),
-    Output("destination-filter", "options"),
-    Input("airline-filter", "id")  # dummy input to trigger once
+    ],
 )
-def load_dropdown_options(_):
+
+
+# ------------------------------------------------------------
+# Load radio options
+# ------------------------------------------------------------
+@dash.callback(
+    Output("airline-radio", "children"),
+    Output("destination-radio", "children"),
+    Output("airline-radio", "value"),
+    Output("destination-radio", "value"),
+    Input("graph-selector", "value"),
+)
+def load_radio_options(_):
 
     airlines = requests.get(f"{API_URL}/analytics/list-airlines").json()
     destinations = requests.get(f"{API_URL}/analytics/list-destinations").json()
 
-    return airlines, destinations
+    neon_blue = "#7DF9FF"
+    neon_pink = "#FF6EC7"
+
+    airline_buttons = dmc.Group(
+        gap="sm",
+        children=[
+            dmc.Radio(
+                label="All",
+                value="ALL",
+                styles={"label": {"color": "#E6EDF3"}},
+            ),
+            *[
+                dmc.Radio(
+                    label=a["label"],
+                    value=a["value"],
+                    styles={
+                        "label": {
+                            "color": "#B8C7D9",
+                        },
+                        "radio": {
+                            "borderColor": neon_blue,
+                        },
+                    },
+                )
+                for a in airlines
+            ],
+        ],
+    )
+
+    destination_buttons = dmc.Group(
+        gap="sm",
+        children=[
+            dmc.Radio(
+                label="All",
+                value="ALL",
+                styles={"label": {"color": "#E6EDF3"}},
+            ),
+            *[
+                dmc.Radio(
+                    label=d["label"],
+                    value=d["value"],
+                    styles={
+                        "label": {"color": "#B8C7D9"},
+                        "radio": {"borderColor": neon_pink},
+                    },
+                )
+                for d in destinations
+            ],
+        ],
+    )
+
+    return airline_buttons, destination_buttons, "ALL", "ALL"
 
 
+# ------------------------------------------------------------
+# Graph update
+# ------------------------------------------------------------
 @dash.callback(
-    Output("hourly-chart", "figure"),
-    Input("airline-filter", "value"),
-    Input("destination-filter", "value"),
-    Input("date-range", "start_date"),
-    Input("date-range", "end_date")
+    Output("main-graph", "figure"),
+    Input("graph-selector", "value"),
+    Input("airline-radio", "value"),
+    Input("destination-radio", "value"),
 )
+def update_graph(graph_type, airline, destination):
 
-def update_hourly(airline, destination, start_date, end_date):
+    if airline == "ALL":
+        airline = None
+    if destination == "ALL":
+        destination = None
 
-    params = {
-        "airline": airline,
-        "destination": destination,
-        "start_date": start_date,
-        "end_date": end_date
-    }
+    params = {"airline": airline, "destination": destination}
 
-    data = requests.get(f"{API_URL}/analytics/flights-per-hour", params=params).json()
+    if graph_type == "hour":
+        data = requests.get(
+            f"{API_URL}/analytics/flights-per-hour",
+            params=params,
+        ).json()
 
-    print("Airline API response:", data)
+        fig = px.bar(
+            data,
+            x="hour",
+            y="flights",
+            title="Flights per Hour",
+            color_discrete_sequence=["#7DF9FF"],  # neon cyan
+        )
 
-    fig = px.bar(data, x="hour", y="flights", title="Flights per Hour")
-    fig.update_layout(xaxis=dict(dtick=1))
+        fig.update_layout(
+            template="plotly_dark",
+            paper_bgcolor="#0F1623",
+            plot_bgcolor="#0F1623",
+            font=dict(color="#E6EDF3"),
+            xaxis=dict(dtick=1, gridcolor="#1F2A3A"),
+            yaxis=dict(gridcolor="#1F2A3A"),
+        )
 
-    return fig
+        return fig
 
-@dash.callback(
-    Output("daily-chart", "figure"),
-    Input("airline-filter", "value"),
-    Input("destination-filter", "value"),
-    Input("date-range", "start_date"),
-    Input("date-range", "end_date")
-)
+    data = requests.get(
+        f"{API_URL}/analytics/flights-per-day",
+        params=params,
+    ).json()
 
-def update_daily(airline, destination, start_date, end_date):
+    fig = px.line(
+        data,
+        x="flight_date",
+        y="flights",
+        title="Flights per Day",
+        markers=True,
+        color_discrete_sequence=["#FF6EC7"],  # neon pink
+    )
 
-    params = {
-        "airline": airline,
-        "destination": destination,
-        "start_date": start_date,
-        "end_date": end_date
-    }
-
-    data = requests.get(f"{API_URL}/analytics/flights-per-day", params=params).json()
-
-    fig = px.line(data, x="flight_date", y="flights", markers=True,
-                  title="Flights per Day")
-
-    return fig
-
-@dash.callback(
-    Output("airline-chart", "figure"),
-    Input("airline-filter", "value"),
-    Input("destination-filter", "value"),
-    Input("date-range", "start_date"),
-    Input("date-range", "end_date")
-)
-
-def update_airline(airline, destination, start_date, end_date):
-
-    params = {
-        "airline": airline,
-        "destination": destination,
-        "start_date": start_date,
-        "end_date": end_date
-    }
-
-    resp = requests.get(f"{API_URL}/analytics/flights-per-airline", params=params)
-    print("RAW RESPONSE:", resp.text)
-    data = resp.json()
-
-    fig = px.bar(data, x="airline", y="flights",
-                 title="Flights per Airline")
-
-    return fig
-
-@dash.callback(
-    Output("destination-chart", "figure"),
-    Input("airline-filter", "value"),
-    Input("destination-filter", "value"),
-    Input("date-range", "start_date"),
-    Input("date-range", "end_date")
-)
-
-def update_destination(airline, destination, start_date, end_date):
-
-    params = {
-        "airline": airline,
-        "destination": destination,
-        "start_date": start_date,
-        "end_date": end_date
-    }
-
-    data = requests.get(f"{API_URL}/analytics/flights-per-destination", params=params).json()
-
-    fig = px.bar(data, x="arr_airport_code", y="flights",
-                 title="Flights per Destination")
+    fig = apply_dark_theme(fig)
 
     return fig
