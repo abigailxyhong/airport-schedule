@@ -2,10 +2,12 @@ import dash
 import requests
 import plotly.express as px
 import dash_mantine_components as dmc
-
 from dash import dcc, Input, Output
+from dotenv import load_dotenv
+import os
 
-API_URL = "http://127.0.0.1:8000"
+load_dotenv()
+API_URL = os.getenv("API_URL", "http://api:8000")
 
 dash.register_page(__name__, path="/flight_volume")
 

@@ -4,8 +4,11 @@ import dash_mantine_components as dmc
 import requests
 import pandas as pd
 import plotly.express as px
+from dotenv import load_dotenv
+import os
 
-API_URL = "http://localhost:8000"
+load_dotenv()
+API_URL = os.getenv("API_URL", "http://api:8000")
 
 dash.register_page(__name__, path="/")
 
@@ -14,9 +17,6 @@ date_info = requests.get(f"{API_URL}/analytics/date-range").json()
 MIN_DATE = date_info["min_date"]
 MAX_DATE = date_info["max_date"]
 
-# -----------------------------
-# PAGE LAYOUT
-# -----------------------------
 # -----------------------------
 # PAGE LAYOUT
 # -----------------------------
@@ -177,9 +177,6 @@ def load_summary(selected_date):
     top_airline = top_airline_resp.get("top_airline", {}).get("airline", "N/A")
 
     top_dest = top_dest_resp.get("top_destination", {}).get("arr_airport_code", "N/A")
-
-    print(top_airline_resp)
-    print(top_dest_resp)
 
     # ---------------- CHART (NEW) ----------------
     if flights_df.empty:

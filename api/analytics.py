@@ -114,35 +114,3 @@ def top_destination(df):
         "arr_airport_code": top,
         "flights": int(value)
     }
-
-def summary_day_flights(df: pd.DataFrame) -> pd.DataFrame:
-    """
-    Returns flight-level summary for a single day view:
-    - carrier code
-    - flight number
-    - arrival airport code
-    - departure time
-    - aircraft code
-    - seats
-    """
-
-    return (
-        df[[
-            "carrier",
-            "flight_no",
-            "arr_airport_code",
-            "dep_time_str",
-            "aircraft_code",
-            "seats"
-        ]]
-        .rename(columns={
-            "carrier": "carrier_code",
-            "flight_no": "flight_number",
-            "arr_airport_code": "arrival_airport",
-            "dep_time_str": "departure_time",
-            "aircraft_code": "aircraft_code",
-            "seats": "seats"
-        })
-        .sort_values("departure_time")
-        .reset_index(drop=True)
-    )

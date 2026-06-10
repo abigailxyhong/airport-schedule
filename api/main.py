@@ -136,12 +136,3 @@ def get_seats_per_hour(
 
     result = analytics.seats_per_hour(dff)
     return result.to_dict(orient="records")
-
-@app.get("/analytics/summary-day-flights")
-def get_summary_day_flights(
-    start_date: str | None = None,
-    end_date: str | None = None,
-):
-    dff = analytics.apply_filters(df, start_date=start_date, end_date=end_date)
-    result = analytics.summary_day_flights(dff)
-    return result.to_dict(orient="records")
