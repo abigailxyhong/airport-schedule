@@ -19,6 +19,12 @@ navbar = dmc.Paper(
                 gap="xl",
                 children=[
                     dmc.Anchor(
+                        "OVERVIEW",
+                        href="/",
+                        underline="never",
+                        className="nav-link",
+                    ),
+                    dmc.Anchor(
                         "FLIGHT VOLUME",
                         href="/flight_volume",
                         underline="never",

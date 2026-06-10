@@ -28,25 +28,18 @@ def apply_filters(
     return dff
 
 
-# -----------------------------
-# FLIGHTS PER HOUR
-# -----------------------------
 def flights_per_hour(df: pd.DataFrame) -> pd.DataFrame:
     """
-    Returns flights grouped by departure hour.
-    Requires df['hour'] from load_data().
+    Time series: must always be sorted chronologically.
     """
     return (
-        df.groupby("hour")
+        df.groupby("hour", as_index=False)
           .size()
-          .reset_index(name="flights")
+          .rename(columns={"size": "flights"})
           .sort_values("hour")
     )
 
 
-# -----------------------------
-# FLIGHTS PER DAY
-# -----------------------------
 def flights_per_day(df: pd.DataFrame) -> pd.DataFrame:
     """
     Returns flights grouped by flight_date.
@@ -59,56 +52,97 @@ def flights_per_day(df: pd.DataFrame) -> pd.DataFrame:
     )
 
 
-# -----------------------------
-# FLIGHTS PER AIRLINE
-# -----------------------------
 def flights_per_airline(df: pd.DataFrame) -> pd.DataFrame:
     """
-    Returns flights grouped by airline, with debug prints.
-    """
-
-    print("\n=== flights_per_airline DEBUG ===")
-    print("Incoming DF shape:", df.shape)
-    print("DF columns:", df.columns.tolist())
-
-    # Show first few rows
-    print("Head of DF:")
-    print(df.head())
-
-    # Check if airline column exists
-    if "airline" not in df.columns:
-        print("ERROR: 'airline' column NOT FOUND in dataframe!")
-        return pd.DataFrame()  # return empty to avoid crashing
-
-    try:
-        grouped = (
-            df.groupby("airline")
-              .size()
-              .reset_index(name="flights")
-              .sort_values("flights", ascending=False)
-        )
-
-        print("Grouped result:")
-        print(grouped)
-
-        return grouped
-
-    except Exception as e:
-        print("ERROR inside flights_per_airline:", e)
-        raise e
-
-
-
-# -----------------------------
-# FLIGHTS PER DESTINATION
-# -----------------------------
-def flights_per_destination(df: pd.DataFrame) -> pd.DataFrame:
-    """
-    Returns flights grouped by destination airport.
+    Returns airlines ranked by number of flights (descending).
     """
     return (
-        df.groupby("arr_airport_code")
+        df.groupby("airline", as_index=False)
           .size()
-          .reset_index(name="flights")
+          .rename(columns={"size": "flights"})
           .sort_values("flights", ascending=False)
+          .reset_index(drop=True)
+    )
+
+def flights_per_destination(df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Returns destinations ranked by traffic (descending).
+    """
+    return (
+        df.groupby("arr_airport_code", as_index=False)
+          .size()
+          .rename(columns={"size": "flights"})
+          .sort_values("flights", ascending=False)
+          .reset_index(drop=True)
+    )
+
+def seats_per_hour(df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Returns total seats offered grouped by departure hour.
+    """
+
+    return (
+        df.groupby("hour", as_index=False)["seats"]
+          .sum()
+          .sort_values("hour")
+    )
+
+def top_airline(df):
+    if df.empty or "airline" not in df.columns:
+        return None
+
+    counts = df.groupby("airline").size()
+
+    top = counts.idxmax()
+    value = counts.max()
+
+    return {
+        "airline": top,
+        "flights": int(value)
+    }
+
+def top_destination(df):
+    if df.empty or "arr_airport_code" not in df.columns:
+        return None
+
+    counts = df.groupby("arr_airport_code").size()
+
+    top = counts.idxmax()
+    value = counts.max()
+
+    return {
+        "arr_airport_code": top,
+        "flights": int(value)
+    }
+
+def summary_day_flights(df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Returns flight-level summary for a single day view:
+    - carrier code
+    - flight number
+    - arrival airport code
+    - departure time
+    - aircraft code
+    - seats
+    """
+
+    return (
+        df[[
+            "carrier",
+            "flight_no",
+            "arr_airport_code",
+            "dep_time_str",
+            "aircraft_code",
+            "seats"
+        ]]
+        .rename(columns={
+            "carrier": "carrier_code",
+            "flight_no": "flight_number",
+            "arr_airport_code": "arrival_airport",
+            "dep_time_str": "departure_time",
+            "aircraft_code": "aircraft_code",
+            "seats": "seats"
+        })
+        .sort_values("departure_time")
+        .reset_index(drop=True)
     )

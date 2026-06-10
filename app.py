@@ -12,7 +12,7 @@ from api.data_loader import load_data
 # App initialisation
 # ------------------------------------------------------------
 def main() -> None:
-    app = Dash(__name__)
+    app = Dash(__name__, use_pages="True")
     app.title = "Jersey Airport Dashboard"
     app.layout = create_layout(app)
     app.run(debug=True)
